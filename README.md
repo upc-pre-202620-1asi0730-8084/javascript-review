@@ -28,7 +28,7 @@ In the document [docs/user-stories.md](docs/user-stories.md), you can find the u
 
 ## Class Diagram
 The following class diagram illustrates the relationships between the main classes in the project:
-![class-diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202510-1asi0730-sandbox/javascript-review/refs/heads/master/docs/class-diagram.puml?token=GHSAT0AAAAAAC7JG2V4FDM7AAENBWAOX7EQZ7YS3OQ)
+![class-diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202510-1asi0730-sandbox/javascript-review/refs/heads/master/docs/class-diagram.puml?token=GHSAT0AAAAAAC7JG2V4JNMS4HWB3KBP2PAUZ7YS65Q)
 
 You can review the class diagram in the [docs/class-diagram.puml](docs/class-diagram.puml) file.
 
