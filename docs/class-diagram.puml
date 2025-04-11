@@ -3,8 +3,8 @@ skinparam monochrome true
 skinparam classAttributeIconSize 0
 skinparam padding 1
 
-' Shared Domain
-package "Shared Domain" {
+' Shared Bounded Context
+package "Shared Bounded Context" {
   class SupplierId {
     -_value: string
     +generate(): SupplierId <<static>> <<factory>>
@@ -50,8 +50,8 @@ package "Shared Domain" {
   }
 }
 
-' SCM Domain
-package "SCM Domain" {
+' SCM Bounded Context
+package "SCM Bounded Context" {
   class Supplier {
     -_id: SupplierId
     -_name: string
@@ -64,8 +64,8 @@ package "SCM Domain" {
   }
 }
 
-' Procurement Domain
-package "Procurement Domain" {
+' Procurement Bounded Context
+package "Procurement Bounded Context" {
   class PurchaseOrder {
     -_id: string
     -_supplierId: SupplierId
