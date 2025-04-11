@@ -1,0 +1,141 @@
+@startuml
+skinparam monochrome true
+skinparam classAttributeIconSize 0
+skinparam padding 1
+
+' Shared Domain
+package "Shared Domain" {
+  class SupplierId {
+    -_value: string
+    +generate(): SupplierId <<static>> <<factory>>
+    +value: string
+    +equals(other: SupplierId): boolean
+  }
+
+  class ProductId {
+    -_value: string
+    +generate(): ProductId <<static>> <<factory>>
+    +value: string
+    +equals(other: ProductId): boolean
+  }
+
+  class Currency {
+    -_code: string
+    +code: string
+    +equals(other: Currency): boolean
+  }
+
+  class Money {
+    -_amount: number
+    -_currency: Currency
+    +amount: number
+    +currency: Currency
+    +add(other: Money): Money
+    +multiply(multiplier: number): Money
+    +toString(): string
+    +equals(other: Money): boolean
+  }
+
+  class DateTime {
+    -_date: Date
+    +date: Date
+    +toISOString(): string
+    +toString(): string
+    +equals(other: DateTime): boolean
+  }
+
+  class "uuid" <<utility>> {
+    +generateUuid(): string
+    +validateUuid(value: string): boolean
+  }
+}
+
+' SCM Domain
+package "SCM Domain" {
+  class Supplier {
+    -_id: SupplierId
+    -_name: string
+    -_contactEmail: string | null
+    -_lastOrderTotalPrice: Money | null
+    +id: SupplierId
+    +name: string
+    +contactEmail: string | null
+    +lastOrderTotalPrice: Money | null
+  }
+}
+
+' Procurement Domain
+package "Procurement Domain" {
+  class PurchaseOrder {
+    -_id: string
+    -_supplierId: SupplierId
+    -_currency: Currency
+    -_orderDate: DateTime
+    -_items: PurchaseOrderItem[]
+    -_state: PurchaseOrderState
+    +id: string
+    +supplierId: SupplierId
+    +currency: Currency
+    +orderDate: DateTime
+    +items: PurchaseOrderItem[]
+    +state: string
+    +addItem(params): void
+    +calculateTotalPrice(): Money
+    +submit(): void
+    +approve(): void
+    +ship(): void
+    +complete(): void
+    +cancel(): void
+  }
+
+  class PurchaseOrderItem {
+    -_orderId: string
+    -_productId: ProductId
+    -_quantity: number
+    -_unitPrice: Money
+    +productId: ProductId
+    +quantity: number
+    +unitPrice: Money
+    +calculateSubtotal(): Money
+  }
+
+  class PurchaseOrderState {
+    -_value: string
+    +value: string
+    +toSubmittedFrom(currentState: PurchaseOrderState): PurchaseOrderState
+    +toApprovedFrom(currentState: PurchaseOrderState): PurchaseOrderState
+    +toShippedFrom(currentState: PurchaseOrderState): PurchaseOrderState
+    +toCompletedFrom(currentState: PurchaseOrderState): PurchaseOrderState
+    +toCanceledFrom(currentState: PurchaseOrderState): PurchaseOrderState
+    +equals(other: PurchaseOrderState): boolean
+  }
+}
+
+' Relationships
+SupplierId -down-> "uuid" : uses validateUuid, generateUuid
+ProductId -down-> "uuid" : uses validateUuid, generateUuid
+PurchaseOrder -down-> PurchaseOrderState : has
+Supplier -down-> SupplierId : has
+Supplier -down-> Money : has lastOrderTotalPrice
+PurchaseOrder -down-> SupplierId : references
+PurchaseOrder -down-> Currency : has
+PurchaseOrder -down-> DateTime : has
+PurchaseOrder -down-> PurchaseOrderItem : contains *
+PurchaseOrderItem -down-> ProductId : has
+PurchaseOrderItem -down-> Money : has unitPrice
+Money -down-> Currency : has
+
+note right of SupplierId
+  SupplierId.generate() creates a new UUID-based ID
+end note
+
+note right of ProductId
+  ProductId.generate() creates a new UUID-based ID
+end note
+
+note right of PurchaseOrderState
+  States: Draft, Submitted, Approved, Shipped, Completed, Canceled
+  Transitions validated via to<State>From methods
+end note
+
+@enduml
