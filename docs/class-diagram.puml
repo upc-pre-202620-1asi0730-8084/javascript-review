@@ -6,28 +6,28 @@ skinparam padding 1
 ' Shared Bounded Context
 package "Shared Bounded Context" {
   class SupplierId {
-    -_value: string
+    -#value: string
     +generate(): SupplierId <<static>> <<factory>>
     +value: string
     +equals(other: SupplierId): boolean
   }
 
   class ProductId {
-    -_value: string
+    -#value: string
     +generate(): ProductId <<static>> <<factory>>
     +value: string
     +equals(other: ProductId): boolean
   }
 
   class Currency {
-    -_code: string
+    -#code: string
     +code: string
     +equals(other: Currency): boolean
   }
 
   class Money {
-    -_amount: number
-    -_currency: Currency
+    -#amount: number
+    -#currency: Currency
     +amount: number
     +currency: Currency
     +add(other: Money): Money
@@ -37,7 +37,7 @@ package "Shared Bounded Context" {
   }
 
   class DateTime {
-    -_date: Date
+    -#date: Date
     +date: Date
     +toISOString(): string
     +toString(): string
@@ -53,10 +53,10 @@ package "Shared Bounded Context" {
 ' SCM Bounded Context
 package "SCM Bounded Context" {
   class Supplier {
-    -_id: SupplierId
-    -_name: string
-    -_contactEmail: string | null
-    -_lastOrderTotalPrice: Money | null
+    -#id: SupplierId
+    -#name: string
+    -#contactEmail: string | null
+    -#lastOrderTotalPrice: Money | null
     +id: SupplierId
     +name: string
     +contactEmail: string | null
@@ -67,12 +67,12 @@ package "SCM Bounded Context" {
 ' Procurement Bounded Context
 package "Procurement Bounded Context" {
   class PurchaseOrder {
-    -_id: string
-    -_supplierId: SupplierId
-    -_currency: Currency
-    -_orderDate: DateTime
-    -_items: PurchaseOrderItem[]
-    -_state: PurchaseOrderState
+    -#id: string
+    -#supplierId: SupplierId
+    -#currency: Currency
+    -#orderDate: DateTime
+    -#items: PurchaseOrderItem[]
+    -#state: PurchaseOrderState
     +id: string
     +supplierId: SupplierId
     +currency: Currency
@@ -89,10 +89,10 @@ package "Procurement Bounded Context" {
   }
 
   class PurchaseOrderItem {
-    -_orderId: string
-    -_productId: ProductId
-    -_quantity: number
-    -_unitPrice: Money
+    -#orderId: string
+    -#productId: ProductId
+    -#quantity: number
+    -#unitPrice: Money
     +productId: ProductId
     +quantity: number
     +unitPrice: Money
@@ -100,7 +100,7 @@ package "Procurement Bounded Context" {
   }
 
   class PurchaseOrderState {
-    -_value: string
+    -#value: string
     +value: string
     +toSubmittedFrom(currentState: PurchaseOrderState): PurchaseOrderState
     +toApprovedFrom(currentState: PurchaseOrderState): PurchaseOrderState
