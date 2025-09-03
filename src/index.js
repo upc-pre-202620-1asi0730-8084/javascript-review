@@ -42,7 +42,7 @@ try {
     console.log("\nTransitioning state to Submitted...");
     po.submit();
 
-    // Attempt to add item after submission
+    // Attempt to add an item after submission
     po.addItem({
         productId: ProductId.generate(),
         quantity: 1,
@@ -54,7 +54,7 @@ try {
 
 console.log("\nTesting invalid cases:");
 try {
-    new Supplier({ id: SupplierId.generate(), name: "A" }); // Too short name
+    new Supplier({ id: SupplierId.generate(), name: "A" }); // A name too short
 } catch (error) {
     console.error(`Error: ${error.message}`);
 }

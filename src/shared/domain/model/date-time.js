@@ -4,6 +4,8 @@ import { ValidationError } from './errors.js';
  * Value object representing a date and time with consistent handling.
  */
 export class DateTime {
+    #date;
+
     /**
      * Creates a new DateTime instance.
      * @param {Date|string} [date=new Date()] - The date (defaults to now).
@@ -14,15 +16,16 @@ export class DateTime {
         if (isNaN(parsedDate.getTime())) {
             throw new ValidationError(`Invalid date: ${date}`);
         }
-        this._date = parsedDate;
+        this.#date = parsedDate;
     }
 
     /**
+     * @property
      * Gets the underlying Date object.
      * @returns {Date} The date.
      */
     get date() {
-        return this._date;
+        return this.#date;
     }
 
     /**
@@ -30,7 +33,7 @@ export class DateTime {
      * @returns {string} The ISO string (e.g., '2023-10-25T14:30:00.000Z').
      */
     toISOString() {
-        return this._date.toISOString();
+        return this.#date.toISOString();
     }
 
     /**
@@ -38,14 +41,9 @@ export class DateTime {
      * @returns {string} The formatted date (e.g., 'October 25, 2023, 2:30 PM').
      */
     toString() {
-        return this._date.toLocaleString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
+        let options = { year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit', hour12: true };
+        return this.#date.toLocaleString('en-US', options);
     }
 
     /**
@@ -54,6 +52,6 @@ export class DateTime {
      * @returns {boolean} True if equal, false otherwise.
      */
     equals(other) {
-        return other instanceof DateTime && this._date.getTime() === other.date.getTime();
+        return other instanceof DateTime && this.#date.getTime() === other.date.getTime();
     }
 }

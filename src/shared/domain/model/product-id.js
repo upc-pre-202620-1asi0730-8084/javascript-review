@@ -5,6 +5,7 @@ import { ValidationError } from './errors.js';
  * Value object representing a unique product identifier.
  */
 export class ProductId {
+    #value;
     /**
      * Creates a new ProductId.
      * @param {string} value - The UUID value.
@@ -14,7 +15,7 @@ export class ProductId {
         if (!validateUuid(value)) {
             throw new ValidationError(`Invalid ProductId: ${value}. Must be a valid UUID`);
         }
-        this._value = value;
+        this.#value = value;
     }
 
     /**
@@ -30,7 +31,7 @@ export class ProductId {
      * @returns {string} The UUID.
      */
     get value() {
-        return this._value;
+        return this.#value;
     }
 
     /**
@@ -39,6 +40,6 @@ export class ProductId {
      * @returns {boolean} True if equal, false otherwise.
      */
     equals(other) {
-        return other instanceof ProductId && this._value === other.value;
+        return other instanceof ProductId && this.#value === other.value;
     }
 }

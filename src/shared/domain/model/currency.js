@@ -6,6 +6,7 @@ import { ValidationError } from './errors.js';
 export class Currency {
     /** @private */
     static #VALID_CODES = ['USD', 'EUR', 'GBP', 'JPY'];
+    #code;
 
     /**
      * Creates a new Currency instance.
@@ -18,7 +19,7 @@ export class Currency {
                 `Invalid currency code: ${code}. Must be one of ${Currency.#VALID_CODES.join(', ')}`
             );
         }
-        this._code = code;
+        this.#code = code;
     }
 
     /**
@@ -26,7 +27,7 @@ export class Currency {
      * @returns {string} The currency code.
      */
     get code() {
-        return this._code;
+        return this.#code;
     }
 
     /**
@@ -35,6 +36,6 @@ export class Currency {
      * @returns {boolean} True if equal, false otherwise.
      */
     equals(other) {
-        return other instanceof Currency && this._code === other.code;
+        return other instanceof Currency && this.#code === other.code;
     }
 }

@@ -5,6 +5,7 @@ import { ValidationError } from './errors.js';
  * Value object representing a unique supplier identifier.
  */
 export class SupplierId {
+    #value;
     /**
      * Creates a new SupplierId.
      * @param {string} value - The UUID value.
@@ -14,7 +15,7 @@ export class SupplierId {
         if (!validateUuid(value)) {
             throw new ValidationError(`Invalid SupplierId: ${value}. Must be a valid UUID`);
         }
-        this._value = value;
+        this.#value = value;
     }
 
     /**
@@ -30,7 +31,7 @@ export class SupplierId {
      * @returns {string} The UUID.
      */
     get value() {
-        return this._value;
+        return this.#value;
     }
 
     /**
@@ -39,6 +40,6 @@ export class SupplierId {
      * @returns {boolean} True if equal, false otherwise.
      */
     equals(other) {
-        return other instanceof SupplierId && this._value === other.value;
+        return other instanceof SupplierId && this.#value === other.value;
     }
 }

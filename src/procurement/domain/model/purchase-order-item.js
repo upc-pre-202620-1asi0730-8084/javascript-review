@@ -6,6 +6,10 @@ import { ValidationError } from '../../../shared/domain/model/errors.js';
  * Value object representing an item in a purchase order.
  */
 export class PurchaseOrderItem {
+    #orderId;
+    #productId;
+    #quantity;
+    #unitPrice;
     /**
      * Creates a new PurchaseOrderItem.
      * @param {Object} params - The parameters.
@@ -29,10 +33,10 @@ export class PurchaseOrderItem {
             throw new ValidationError("Unit price must be a valid Money object");
         }
 
-        this._orderId = orderId;
-        this._productId = productId;
-        this._quantity = quantity;
-        this._unitPrice = unitPrice;
+        this.#orderId = orderId;
+        this.#productId = productId;
+        this.#quantity = quantity;
+        this.#unitPrice = unitPrice;
     }
 
     /**
@@ -40,7 +44,7 @@ export class PurchaseOrderItem {
      * @returns {ProductId} The product ID.
      */
     get productId() {
-        return this._productId;
+        return this.#productId;
     }
 
     /**
@@ -48,7 +52,7 @@ export class PurchaseOrderItem {
      * @returns {number} The quantity.
      */
     get quantity() {
-        return this._quantity;
+        return this.#quantity;
     }
 
     /**
@@ -56,7 +60,7 @@ export class PurchaseOrderItem {
      * @returns {Money} The unit price.
      */
     get unitPrice() {
-        return this._unitPrice;
+        return this.#unitPrice;
     }
 
     /**
@@ -64,6 +68,6 @@ export class PurchaseOrderItem {
      * @returns {Money} The subtotal.
      */
     calculateSubtotal() {
-        return this._unitPrice.multiply(this._quantity);
+        return this.#unitPrice.multiply(this.#quantity);
     }
 }

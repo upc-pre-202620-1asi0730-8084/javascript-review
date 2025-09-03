@@ -16,6 +16,7 @@ export class PurchaseOrderState {
         COMPLETED: 'Completed',
         CANCELED: 'Canceled'
     };
+    #value;
 
     /**
      * Creates a new PurchaseOrderState.
@@ -24,7 +25,7 @@ export class PurchaseOrderState {
      */
     constructor(value = PurchaseOrderState.#VALID_STATES.DRAFT) {
         this.#validateState(value);
-        this._value = value;
+        this.#value = value;
     }
 
     /**
@@ -118,7 +119,7 @@ export class PurchaseOrderState {
      * Transitions to Canceled state from the current state.
      *
      * **Business Rule**: A purchase order can be canceled at any point before completion if it is no
-     * longer needed or if issues arise (e.g., supplier failure, budget cuts). Cancellation is blocked
+     * longer necessary or if issues arise (e.g., supplier failure, budget cuts). Cancellation is blocked
      * once the order is Completed to prevent reversal of finalized transactions and maintain audit
      * integrity.
      *
@@ -143,7 +144,7 @@ export class PurchaseOrderState {
      * @returns {boolean} True if the state is 'Draft', false otherwise.
      */
     isDraft() {
-        return this._value === PurchaseOrderState.#VALID_STATES.DRAFT;
+        return this.#value === PurchaseOrderState.#VALID_STATES.DRAFT;
     }
 
     /**
@@ -151,7 +152,7 @@ export class PurchaseOrderState {
      * @returns {string} The state (e.g., 'Draft', 'Submitted').
      */
     get value() {
-        return this._value;
+        return this.#value;
     }
 
     /**
@@ -160,6 +161,6 @@ export class PurchaseOrderState {
      * @returns {boolean} True if equal, false otherwise.
      */
     equals(other) {
-        return other instanceof PurchaseOrderState && this._value === other.value;
+        return other instanceof PurchaseOrderState && this.#value === other.value;
     }
 }

@@ -1,12 +1,23 @@
 import { SupplierId } from '../../../shared/domain/model/supplier-id.js';
 import { ValidationError } from '../../../shared/domain/model/errors.js';
+import {Money} from "../../../shared/domain/model/money.js";
 
 /**
+ * @class Supplier
  * Entity representing a supplier in the supply chain management context.
+ * @property {SupplierId} id - The unique identifier for the supplier.
+ * @property {string} name - The name of the supplier.
+ * @property {string|null} contactEmail - The contact email of the supplier (optional).
+ * @property {Money|null} lastOrderTotalPrice - The total price of the last order from this supplier (optional).
  */
 export class Supplier {
+    #id;
+    #name;
+    #contactEmail;
+    #lastOrderTotalPrice;
     /**
      * Creates a new Supplier.
+     * @constructor
      * @param {Object} params - The parameters.
      * @param {SupplierId} params.id - The supplier ID.
      * @param {string} params.name - The supplier name.
@@ -28,15 +39,16 @@ export class Supplier {
             throw new ValidationError("Last order total price must be a Money object or null");
         }
 
-        this._id = id;
-        this._name = name;
-        this._contactEmail = contactEmail;
-        this._lastOrderTotalPrice = lastOrderTotalPrice;
+        this.#id = id;
+        this.#name = name;
+        this.#contactEmail = contactEmail;
+        this.#lastOrderTotalPrice = lastOrderTotalPrice;
     }
 
     /**
-     * Validates an email address.
      * @private
+     * Validates an email address.
+     *
      * @param {string} email - The email to validate.
      * @returns {boolean} True if valid, false otherwise.
      */
@@ -46,34 +58,39 @@ export class Supplier {
     }
 
     /**
+     * @public
      * Gets the supplier ID.
+     *
      * @returns {SupplierId} The supplier ID.
      */
     get id() {
-        return this._id;
+        return this.#id;
     }
 
     /**
      * Gets the supplier name.
+     * @public
      * @returns {string} The name.
      */
     get name() {
-        return this._name;
+        return this.#name;
     }
 
     /**
+     * @public
      * Gets the contact email.
      * @returns {string|null} The contact email or null.
      */
     get contactEmail() {
-        return this._contactEmail;
+        return this.#contactEmail;
     }
 
     /**
+     * @public
      * Gets the last order total price.
      * @returns {Money|null} The last order total price or null.
      */
     get lastOrderTotalPrice() {
-        return this._lastOrderTotalPrice;
+        return this.#lastOrderTotalPrice;
     }
 }

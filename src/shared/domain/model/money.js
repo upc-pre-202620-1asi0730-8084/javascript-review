@@ -5,6 +5,8 @@ import {Currency} from "./currency.js";
  * Value object representing an amount of money with a currency.
  */
 export class Money {
+    #amount;
+    #currency;
     /**
      * Creates a new Money instance.
      * @param {Object} params - The parameters.
@@ -19,8 +21,8 @@ export class Money {
         if (!(currency instanceof Currency)) {
             throw new ValidationError("Currency must be a valid Currency object");
         }
-        this._amount = Number(amount.toFixed(2)); // Round to 2 decimal places
-        this._currency = currency;
+        this.#amount = Number(amount.toFixed(2)); // Round to 2 decimal places
+        this.#currency = currency;
     }
 
     /**
@@ -28,7 +30,7 @@ export class Money {
      * @returns {number} The amount.
      */
     get amount() {
-        return this._amount;
+        return this.#amount;
     }
 
     /**
@@ -36,7 +38,7 @@ export class Money {
      * @returns {Currency} The currency.
      */
     get currency() {
-        return this._currency;
+        return this.#currency;
     }
 
     /**
@@ -46,12 +48,12 @@ export class Money {
      * @throws {ValidationError} If currencies do not match.
      */
     add(other) {
-        if (!(other instanceof Money) || !this._currency.equals(other.currency)) {
+        if (!(other instanceof Money) || !this.#currency.equals(other.currency)) {
             throw new ValidationError("Cannot add Money with different currencies");
         }
         return new Money({
-            amount: this._amount + other.amount,
-            currency: this._currency
+            amount: this.#amount + other.amount,
+            currency: this.#currency
         });
     }
 
@@ -66,8 +68,8 @@ export class Money {
             throw new ValidationError("Multiplier must be a non-negative number");
         }
         return new Money({
-            amount: this._amount * multiplier,
-            currency: this._currency
+            amount: this.#amount * multiplier,
+            currency: this.#currency
         });
     }
 
@@ -76,7 +78,7 @@ export class Money {
      * @returns {string} The formatted money (e.g., '$100.50').
      */
     toString() {
-        return `${this._currency.code} ${this._amount.toFixed(2)}`;
+        return `${this.#currency.code} ${this.#amount.toFixed(2)}`;
     }
 
     /**
@@ -87,8 +89,8 @@ export class Money {
     equals(other) {
         return (
             other instanceof Money &&
-            this._amount === other.amount &&
-            this._currency.equals(other.currency)
+            this.#amount === other.amount &&
+            this.#currency.equals(other.currency)
         );
     }
 }

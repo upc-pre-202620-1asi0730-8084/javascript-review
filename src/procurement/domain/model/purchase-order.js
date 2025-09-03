@@ -10,8 +10,15 @@ import {Currency} from "../../../shared/domain/model/currency.js";
  * Entity representing a purchase order with a lifecycle state.
  */
 export class PurchaseOrder {
+    
     /** @private */
     #MAX_ITEMS = 50;
+    #id;
+    #supplierId;
+    #currency;
+    #orderDate;
+    #items;
+    #state;
 
     /**
      * Creates a new PurchaseOrder.
@@ -28,19 +35,19 @@ export class PurchaseOrder {
         if (!(currency instanceof Currency)) {
             throw new ValidationError("Currency must be a valid Currency object");
         }
-        this._id = generateUuid();
-        this._supplierId = supplierId;
-        this._currency = currency;
-        this._orderDate = orderDate instanceof DateTime ? orderDate : new DateTime();
-        this._items = [];
-        this._state = new PurchaseOrderState(); // Initial state: Draft
+        this.#id = generateUuid();
+        this.#supplierId = supplierId;
+        this.#currency = currency;
+        this.#orderDate = orderDate instanceof DateTime ? orderDate : new DateTime();
+        this.#items = [];
+        this.#state = new PurchaseOrderState(); // Initial state: Draft
     }
 
     /**
      * Adds an item to the purchase order if conditions are met.
      *
      * **Business Rules**:
-     * - **Draft State Only**: Items can only be added while the purchase order is in Draft state.
+     * - **Draft State Only**: Items can only be added while the purchase order is in the Draft state.
      *   This ensures that modifications are restricted to the preparation phase, preventing changes
      *   after submission for approval or fulfillment to maintain order integrity and auditability.
      * - **Maximum Items Limit**: A purchase order cannot exceed 50 items. This constraint prevents
@@ -54,24 +61,24 @@ export class PurchaseOrder {
      * @param {string} params.productId - The product ID.
      * @param {number} params.quantity - The quantity.
      * @param {number} params.unitPrice - The unit price amount.
-     * @throws {ValidationError} If state is not Draft, max items (50) is exceeded, or unit price is invalid (negative or non-finite).
+     * @throws {ValidationError} If state is not Draft, max items (50) are exceeded, or unit price is invalid (negative or non-finite).
      */
     addItem({ productId, quantity, unitPrice }) {
-        if (!this._state.isDraft()) {
+        if (!this.#state.isDraft()) {
             throw new ValidationError("Items can only be added to a PurchaseOrder in Draft state");
         }
-        if (this._items.length >= this.#MAX_ITEMS) {
+        if (this.#items.length >= this.#MAX_ITEMS) {
             throw new ValidationError(`PurchaseOrder cannot have more than ${this.#MAX_ITEMS} items`);
         }
         if (!Number.isFinite(unitPrice) || unitPrice < 0) {
             throw new ValidationError("Unit price amount must be a non-negative number");
         }
-        this._items.push(
+        this.#items.push(
             new PurchaseOrderItem({
-                orderId: this._id,
+                orderId: this.#id,
                 productId,
                 quantity,
-                unitPrice: new Money({ amount: unitPrice, currency: this._currency }),
+                unitPrice: new Money({ amount: unitPrice, currency: this.#currency }),
             })
         );
     }
@@ -82,12 +89,12 @@ export class PurchaseOrder {
      * @throws {ValidationError} If the order is empty.
      */
     calculateTotalPrice() {
-        if (this._items.length === 0) {
+        if (this.#items.length === 0) {
             throw new ValidationError("Cannot calculate total price for an empty purchase order");
         }
-        return this._items
+        return this.#items
             .reduce((sum, item) => sum.add(item.calculateSubtotal()),
-                new Money({ amount: 0, currency: this._currency })
+                new Money({ amount: 0, currency: this.#currency })
             );
     }
 
@@ -96,7 +103,7 @@ export class PurchaseOrder {
      * @throws {ValidationError} If not in Draft state.
      */
     submit() {
-        this._state = this._state.toSubmittedFrom(this._state);
+        this.#state = this.#state.toSubmittedFrom(this.#state);
     }
 
     /**
@@ -104,7 +111,7 @@ export class PurchaseOrder {
      * @throws {ValidationError} If not in Submitted state.
      */
     approve() {
-        this._state = this._state.toApprovedFrom(this._state);
+        this.#state = this.#state.toApprovedFrom(this.#state);
     }
 
     /**
@@ -112,7 +119,7 @@ export class PurchaseOrder {
      * @throws {ValidationError} If not in Approved state.
      */
     ship() {
-        this._state = this._state.toShippedFrom(this._state);
+        this.#state = this.#state.toShippedFrom(this.#state);
     }
 
     /**
@@ -120,7 +127,7 @@ export class PurchaseOrder {
      * @throws {ValidationError} If not in Shipped state.
      */
     complete() {
-        this._state = this._state.toCompletedFrom(this._state);
+        this.#state = this.#state.toCompletedFrom(this.#state);
     }
 
     /**
@@ -128,7 +135,7 @@ export class PurchaseOrder {
      * @throws {ValidationError} If in Completed state.
      */
     cancel() {
-        this._state = this._state.toCanceledFrom(this._state);
+        this.#state = this.#state.toCanceledFrom(this.#state);
     }
 
     /**
@@ -136,7 +143,7 @@ export class PurchaseOrder {
      * @returns {string} The order ID.
      */
     get id() {
-        return this._id;
+        return this.#id;
     }
 
     /**
@@ -144,7 +151,7 @@ export class PurchaseOrder {
      * @returns {SupplierId} The supplier ID.
      */
     get supplierId() {
-        return this._supplierId;
+        return this.#supplierId;
     }
 
     /**
@@ -152,7 +159,7 @@ export class PurchaseOrder {
      * @returns {Currency} The currency.
      */
     get currency() {
-        return this._currency;
+        return this.#currency;
     }
 
     /**
@@ -160,7 +167,7 @@ export class PurchaseOrder {
      * @returns {DateTime} The order date.
      */
     get orderDate() {
-        return this._orderDate;
+        return this.#orderDate;
     }
 
     /**
@@ -168,7 +175,7 @@ export class PurchaseOrder {
      * @returns {PurchaseOrderItem[]} The items.
      */
     get items() {
-        return this._items;
+        return this.#items;
     }
 
     /**
@@ -176,6 +183,6 @@ export class PurchaseOrder {
      * @returns {string} The state (e.g., 'Draft', 'Submitted', 'Approved', 'Shipped', 'Completed', 'Canceled').
      */
     get state() {
-        return this._state.value;
+        return this.#state.value;
     }
 }
