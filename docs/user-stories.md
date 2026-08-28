@@ -6,10 +6,10 @@ I want to create a supplier with a name and optional contact email,
 So that I can track vendors in the supply chain system.
 
 **Acceptance Criteria:**
-- Supplier must have a unique ID (UUID).
-- Name must be between 2 and 100 characters.
-- Contact email, if provided, must be a valid email format.
-- Last order total price is optional and initially null.
+- Given a name between 2 and 100 characters and a valid email, when a supplier is created, then the system assigns a unique UUID as its identifier.
+- Given a new supplier, when it is initialized, then the last order total price is set to null.
+- Given a name shorter than 2 characters or longer than 100 characters, when a supplier creation is attempted, then the system throws a validation error.
+- Given an invalid email format, when a supplier creation is attempted, then the system throws a validation error.
 
 ## US002: Record Last Order Total for Supplier
 As a procurement manager,  
@@ -17,8 +17,9 @@ I want to record the total price of the last order for a supplier,
 So that I can analyze supplier performance and order history.
 
 **Acceptance Criteria:**
-- Last order total price must be a valid Money object or null.
-- Currency must match the purchase order currency if set.
+- Given a valid Money object, when the procurement manager records the last order total for a supplier, then the supplier's last order total price is updated.
+- Given a null value, when the procurement manager records the last order total for a supplier, then the supplier's last order total price is cleared.
+- Given a non-Money object that is not null, when a recording attempt occurs for the last order total, then the system throws a validation error.
 
 ## US003: Create a Purchase Order
 As a procurement manager,  
@@ -26,11 +27,9 @@ I want to create a purchase order with a supplier and currency,
 So that I can begin ordering products.
 
 **Acceptance Criteria:**
-- Purchase order must have a unique ID (UUID).
-- Must specify a valid SupplierId.
-- Must specify a valid Currency (USD, EUR, GBP, JPY).
-- Order date defaults to current date/time if not provided.
-- Initial state is Draft.
+- Given a valid SupplierId and a supported Currency, when a purchase order is created, then the system assigns a unique UUID to the order.
+- Given a new purchase order, when it is initialized, then its state is set to Draft and the order date defaults to the current date/time.
+- Given an unsupported currency, when a purchase order creation is attempted, then the system throws a validation error.
 
 ## US004: Add Items to Purchase Order
 As a procurement manager,  
@@ -38,11 +37,10 @@ I want to add items to a purchase order,
 So that I can specify the products and quantities needed.
 
 **Acceptance Criteria:**
-- Can only add items when the purchase order is in Draft state.
-- Product ID must be a valid UUID.
-- Quantity must be a positive integer, max 1000.
-- Unit price must be a non-negative number in the order's currency.
-- Maximum of 50 items per purchase order.
+- Given a purchase order in Draft state, when an item with a valid ProductId, positive quantity (max 1000), and non-negative unit price is added, then the item is included in the order.
+- Given a purchase order not in Draft state, when an attempt to add an item is made, then the system throws an error.
+- Given a quantity greater than 1000 or a negative unit price, when an item is added, then the system throws a validation error.
+- Given a purchase order that already contains 50 items, when another item is added, then the system throws an error.
 
 ## US005: Calculate Total Price
 As a procurement manager,  
@@ -50,9 +48,9 @@ I want to calculate the total price of a purchase order,
 So that I can review costs before submission.
 
 **Acceptance Criteria:**
-- Total price is the sum of all item subtotals (quantity * unit price).
-- Returns a Money object in the order's currency.
-- Fails if the order has no items.
+- Given a purchase order with multiple items, when the total price is calculated, then it returns a Money object representing the sum of all item subtotals (quantity * unit price).
+- Given a purchase order with no items, when the total price is calculated, then the system throws an error.
+- Given a calculation request, when the total price is returned, then the currency of the Money object matches the order's currency.
 
 ## US006: Cancel Purchase Order
 As a procurement manager,  
@@ -60,19 +58,16 @@ I want to cancel a purchase order,
 So that I can stop an order if it’s no longer needed.
 
 **Acceptance Criteria:**
-- Can cancel from any state except Completed.
-- State changes to Canceled.
-- Fails if the order is already Completed.
+- Given a purchase order in any state except Completed, when the procurement manager cancels the order, then the state changes to Canceled state.
+- Given a purchase order is in the Completed state, when a cancellation is attempted, then the system throws an error.
+- Given a canceled purchase order, when further state transitions are attempted, then the system throws an error.
 
-## US007: Manage Purchase Order Lifecycle
+## US007: Manage the Purchase Order Lifecycle
 As a procurement manager,  
 I want to transition a purchase order through its lifecycle (Draft → Submitted → Approved → Shipped → Completed),  
 So that I can track and manage the order process.
 
 **Acceptance Criteria:**
-- Draft to Submitted: Allowed only from Draft.
-- Submitted to Approved: Allowed only from Submitted.
-- Approved to Shipped: Allowed only from Approved.
-- Shipped to Completed: Allowed only from Shipped.
-- Each transition updates the state accordingly.
-- Invalid transitions throw an error with a descriptive message.
+- Given a purchase order, when it follows the sequence Draft → Submitted → Approved → Shipped → Completed, then each transition updates the state accordingly.
+- Given a purchase order in a specific state, when an out-of-sequence transition is attempted (e.g., Draft to Approved), then the system throws a descriptive error.
+- Given a state transition, when the transition is successful, then the order's state property reflects the new status.

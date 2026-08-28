@@ -10,6 +10,15 @@ package "Shared Bounded Context" {
     +generate(): SupplierId <<static>> <<factory>>
     +value: string
     +equals(other: SupplierId): boolean
+    +toString(): string
+  }
+
+  class PurchaseOrderId {
+    -#value: string
+    +generate(): PurchaseOrderId <<static>> <<factory>>
+    +value: string
+    +equals(other: PurchaseOrderId): boolean
+    +toString(): string
   }
 
   class ProductId {
@@ -17,12 +26,14 @@ package "Shared Bounded Context" {
     +generate(): ProductId <<static>> <<factory>>
     +value: string
     +equals(other: ProductId): boolean
+    +toString(): string
   }
 
   class Currency {
     -#code: string
     +code: string
     +equals(other: Currency): boolean
+    +toString(): string
   }
 
   class Money {
@@ -61,19 +72,22 @@ package "SCM Bounded Context" {
     +name: string
     +contactEmail: string | null
     +lastOrderTotalPrice: Money | null
+    +changeName(newName: string): void
+    +updateEmail(newEmail: string): void
+    +recordOrder(orderTotal: Money): void
   }
 }
 
 ' Procurement Bounded Context
 package "Procurement Bounded Context" {
   class PurchaseOrder {
-    -#id: string
+    -#id: PurchaseOrderId
     -#supplierId: SupplierId
     -#currency: Currency
     -#orderDate: DateTime
     -#items: PurchaseOrderItem[]
     -#state: PurchaseOrderState
-    +id: string
+    +id: PurchaseOrderId
     +supplierId: SupplierId
     +currency: Currency
     +orderDate: DateTime
@@ -89,10 +103,11 @@ package "Procurement Bounded Context" {
   }
 
   class PurchaseOrderItem {
-    -#orderId: string
+    -#orderId: PurchaseOrderId
     -#productId: ProductId
     -#quantity: number
     -#unitPrice: Money
+    +orderId: PurchaseOrderId
     +productId: ProductId
     +quantity: number
     +unitPrice: Money
@@ -113,20 +128,27 @@ package "Procurement Bounded Context" {
 
 ' Relationships
 SupplierId -down-> "uuid" : uses validateUuid, generateUuid
+PurchaseOrderId -down-> "uuid" : uses validateUuid, generateUuid
 ProductId -down-> "uuid" : uses validateUuid, generateUuid
 PurchaseOrder -down-> PurchaseOrderState : has
 Supplier -down-> SupplierId : has
 Supplier -down-> Money : has lastOrderTotalPrice
+PurchaseOrder -down-> PurchaseOrderId : has
 PurchaseOrder -down-> SupplierId : references
 PurchaseOrder -down-> Currency : has
 PurchaseOrder -down-> DateTime : has
 PurchaseOrder -down-> PurchaseOrderItem : contains *
+PurchaseOrderItem -down-> PurchaseOrderId : has
 PurchaseOrderItem -down-> ProductId : has
 PurchaseOrderItem -down-> Money : has unitPrice
 Money -down-> Currency : has
 
 note right of SupplierId
   SupplierId.generate() creates a new UUID-based ID
+end note
+
+note right of PurchaseOrderId
+  PurchaseOrderId.generate() creates a new UUID-based ID
 end note
 
 note right of ProductId

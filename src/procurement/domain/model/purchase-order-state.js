@@ -20,7 +20,7 @@ export class PurchaseOrderState {
 
     /**
      * Creates a new PurchaseOrderState.
-     * @param {string} [value=PurchaseOrderState.#VALID_STATES.DRAFT] - The state value, defaults to 'Draft'.
+     * @param {string} [value=PurchaseOrderState.#VALID_STATES.DRAFT] - The state value, which defaults to 'Draft'.
      * @throws {ValidationError} If the value is not a valid state.
      */
     constructor(value = PurchaseOrderState.#VALID_STATES.DRAFT) {

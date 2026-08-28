@@ -23,6 +23,7 @@ export class Money {
         }
         this.#amount = Number(amount.toFixed(2)); // Round to 2 decimal places
         this.#currency = currency;
+        Object.freeze(this);
     }
 
     /**

@@ -14,36 +14,44 @@ try {
         contactEmail: "contact@acme.com"
     });
 
-    const po = new PurchaseOrder({
+    const order = new PurchaseOrder({
         supplierId: supplier.id,
         currency: new Currency('USD'),
         orderDate: new DateTime(new Date('2025-04-10T10:00:00'))
     });
 
-    po.addItem({
+    order.addItem({
         productId: ProductId.generate(),
         quantity: 5,
         unitPrice: 45.99
     });
 
-    po.addItem({
+    order.addItem({
         productId: ProductId.generate(),
         quantity: 10,
         unitPrice: 22.99
     });
 
-    const totalPrice = po.calculateTotalPrice();
-    console.log(`Purchase Order placed on ${po.orderDate.toString()}`);
+    const totalPrice = order.calculateTotalPrice();
+    console.log(`Purchase Order placed on ${order.orderDate.toString()}`);
     console.log(`Total Price: ${totalPrice.toString()}`);
-    console.log(`Order State: ${po.state}`);
-    supplier._lastOrderTotalPrice = totalPrice; // Direct assignment for demo
+    console.log(`Order State: ${order.state}`);
+    
+    // Improved: Using recordOrder domain method instead of direct assignment
+    supplier.recordOrder(totalPrice);
     console.log(`Supplier ${supplier.name} (ID: ${supplier.id.value}) has a last order total of ${supplier.lastOrderTotalPrice.toString()}.`);
 
+    // Demonstrating new domain methods
+    console.log("\nUpdating supplier info...");
+    supplier.changeName("Acme Global Corp");
+    supplier.updateEmail("info@acmeglobal.com");
+    console.log(`Updated Supplier: ${supplier.name} <${supplier.contactEmail}>`);
+
     console.log("\nTransitioning state to Submitted...");
-    po.submit();
+    order.submit();
 
     // Attempt to add an item after submission
-    po.addItem({
+    order.addItem({
         productId: ProductId.generate(),
         quantity: 1,
         unitPrice: 10.00
@@ -60,31 +68,31 @@ try {
 }
 
 try {
-    const po = new PurchaseOrder({
+    const order = new PurchaseOrder({
         supplierId: SupplierId.generate(),
         currency: new Currency('USD')
     });
-    po.addItem({ productId: "invalid-uuid", quantity: 1, unitPrice: 10 }); // Invalid productId
+    order.addItem({ productId: new ProductId("invalid-uuid"), quantity: 1, unitPrice: 10 }); // Invalid productId
 } catch (error) {
     console.error(`Error: ${error.message}`);
 }
 
 try {
-    const po = new PurchaseOrder({
+    const order = new PurchaseOrder({
         supplierId: SupplierId.generate(),
         currency: new Currency('USD')
     });
-    po.addItem({ productId: ProductId.generate(), quantity: 1, unitPrice: -5 }); // Negative unit price
+    order.addItem({ productId: ProductId.generate(), quantity: 1, unitPrice: -5 }); // Negative unit price
 } catch (error) {
     console.error(`Error: ${error.message}`);
 }
 
 try {
-    const po = new PurchaseOrder({
+    const order = new PurchaseOrder({
         supplierId: SupplierId.generate(),
         currency: new Currency('USD')
     });
-    po.approve(); // Invalid transition
+    order.approve(); // Invalid transition
 } catch (error) {
     console.error(`Error: ${error.message}`);
 }

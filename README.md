@@ -1,55 +1,56 @@
-# javascript-review
+# JavaScript Review (javascript-review)
+
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
 ## Overview
-Sample JavaScript console application illustrating object-oriented and domain-driven design principles in the context of Supply Chain Management and Procurement. 
+A JavaScript demonstration project to illustrate **Object-Oriented Programming (OOP)** and **Domain-Driven Design (DDD)** principles within a Supply Chain Management and Procurement context.
 
-## Features
-Main  business concepts include:
-- Suppliers
-- Purchase Orders
-- Purchase Order Items
-- Money and Currency
-- DateTime for order dates
-- Bounded Contexts (Shared, SCM, Procurement)
-- Domain-specific validations
+The codebase serves as a reference for implementing domain models in bounded contexts using the latest JavaScript features.
 
-## Object-Oriented Programming and Domain-Driven Design principles and concepts
-The project demonstrates the following principles and concepts:
-- Encapsulation: Each class encapsulates its data and behavior.
-- Abstraction: Complex logic is abstracted away in methods.
-- Single Responsibility Principle: Each class has a single responsibility.
-- Bounded Contexts: Different modules represent different domains.
-- Value Objects: Money and DateTime are represented as value objects.
-- Aggregate Roots: Purchase Order is an aggregate root that manages its items.
-- State Management: Purchase Order state transitions are managed through methods.
+## 🚀 Key Features
+- **Bounded Contexts:** Clear separation between `Procurement`, `SCM`, and `Shared` subdomains.
+- **Rich Domain Models:** Entities with internal business logic instead of anemic data structures.
+- **Deep Immutability:** Value Objects protected by `Object.freeze()` and defensive cloning.
+- **Standardized Identifiers:** UUID v7 based Value Objects for all entity IDs.
+- **State Machine:** Robust lifecycle management for Purchase Orders.
+- **Professional Tooling:** Integrated ESLint, Prettier, and automated linting.
 
-## User Stories
-In the document [docs/user-stories.md](docs/user-stories.md), you can find the user stories that describe the requirements and acceptance criteria for the project.
+## 🛠️ Principles in Action
+- **Encapsulation:** Uses private class fields (`#`) to protect internal state.
+- **Validation:** Enforces invariants at the constructor level; objects are always valid.
+- **Value Objects:** `Money`, `DateTime`, `Currency`, and IDs are treated as immutable values.
+- **Aggregate Roots:** `PurchaseOrder` manages the consistency of its `PurchaseOrderItem` collection.
 
-## Class Diagram
-The following class diagram illustrates the relationships between the main classes in the project:
-![class-diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-sandbox/javascript-review/refs/heads/master/docs/class-diagram.puml?token=GHSAT0AAAAAADVFVJLANHUHIP7TR7XSTOMW2O4M5EQ)
+## 📖 Documentation
+- [User Stories](docs/user-stories.md) – Requirements presented as User Stories with Acceptance Criteria in Given-When-Then format.
+- [Class Diagram](docs/class-diagram.puml) – Visual representation of the domain model.
+- [Contributing Guide](CONTRIBUTING.md) – Development standards and workflow.
+- [Changelog](CHANGELOG.md) – History of project evolutions.
 
-You can review the class diagram in the [docs/class-diagram.puml](docs/class-diagram.puml) file.
+## 🏁 Getting Started
 
-## Pre-requisites
-- Node.js
-- npm
+### Prerequisites
+- **Node.js** (v20.x or higher recommended)
+- **npm** (v10.x or higher)
 
-## Dependencies
-- uuid (https://www.npmjs.com/package/uuid)
-
-## Installation
+### Installation
 ```bash
 npm install
 ```
-## Running the Project
-```bash
-npm start
-```
-## Author
-Web Application Development Team
 
-## License
-This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) for details.
+### Available Scripts
+- `npm start`: Runs the demonstration entry point (`src/index.js`).
+- `npm run dev`: Starts the application in watch mode.
+- `npm run lint`: Validates code quality using ESLint.
+- `npm run format`: Standardizes code style using Prettier.
+
+## 🤝 Contributing
+Contributions are welcome! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, DDD standards, and the process for submitting pull requests.
+
+## 📝 License
+This project is licensed under the MIT License – see the [LICENSE.md](LICENSE.md) file for details.
+
+---
+**Developed by the Web Application Development Team**
 

@@ -16,6 +16,7 @@ export class SupplierId {
             throw new ValidationError(`Invalid SupplierId: ${value}. Must be a valid UUID`);
         }
         this.#value = value;
+        Object.freeze(this);
     }
 
     /**
@@ -41,5 +42,9 @@ export class SupplierId {
      */
     equals(other) {
         return other instanceof SupplierId && this.#value === other.value;
+    }
+
+    toString() {
+        return this.#value;
     }
 }
