@@ -14,16 +14,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive `.gitignore` file tailored for JavaScript and WebStorm environments.
 - ESLint and Prettier configurations (`eslint.config.js`, `.prettierrc`) to the repository.
 - `CHANGELOG.md` to track project history.
+- `CONTRIBUTING.md` guide to standardize project development and contributions.
+- Refactored `README.md` to include professional project overview, key features, and development scripts.
 
 ### Changed
 - Implemented deep immutability for all Value Objects (`Money`, `DateTime`, `SupplierId`, etc.) using `Object.freeze` and defensive cloning.
 - Refactored `PurchaseOrder` and `PurchaseOrderItem` to use `PurchaseOrderId` instead of raw strings.
 - Improved encapsulation in `PurchaseOrder` by using private fields (`#`) and returning read-only copies of internal state.
 - Updated `package.json` with improved metadata, scripts (`dev`, `lint`, `format`), and updated dependencies.
-- Refactored `docs/user-stories.md` to follow Given-When-Then format and remove UI details.
+- Refactored `docs/user-stories.md` to follow Given-When-Then writing convention and remove UI details.
 - Updated `docs/class-diagram.puml` to reflect the new DDD-aligned architecture.
 - Replaced the placeholder `test` script with `npm run lint`.
 - Updated UUID generation to use version 7.
+- Updated `README.md` to include a new section on "Development Scripts" for easier project setup and maintenance, 
+  and added a "Contributing" section to encourage community involvement. Also added a "License" section to clarify the project's licensing terms.
 
 ### Fixed
 - Standardized validation logic across all domain objects to ensure they are valid upon creation.
