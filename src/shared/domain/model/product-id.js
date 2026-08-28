@@ -16,6 +16,7 @@ export class ProductId {
             throw new ValidationError(`Invalid ProductId: ${value}. Must be a valid UUID`);
         }
         this.#value = value;
+        Object.freeze(this);
     }
 
     /**
@@ -41,5 +42,9 @@ export class ProductId {
      */
     equals(other) {
         return other instanceof ProductId && this.#value === other.value;
+    }
+
+    toString() {
+        return this.#value;
     }
 }

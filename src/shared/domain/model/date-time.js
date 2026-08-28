@@ -16,7 +16,8 @@ export class DateTime {
         if (isNaN(parsedDate.getTime())) {
             throw new ValidationError(`Invalid date: ${date}`);
         }
-        this.#date = parsedDate;
+        this.#date = new Date(parsedDate.getTime()); // Clone to ensure immutability
+        Object.freeze(this);
     }
 
     /**
@@ -25,7 +26,7 @@ export class DateTime {
      * @returns {Date} The date.
      */
     get date() {
-        return this.#date;
+        return new Date(this.#date.getTime());
     }
 
     /**

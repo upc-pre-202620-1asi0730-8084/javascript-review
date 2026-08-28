@@ -20,6 +20,7 @@ export class Currency {
             );
         }
         this.#code = code;
+        Object.freeze(this);
     }
 
     /**
@@ -37,5 +38,9 @@ export class Currency {
      */
     equals(other) {
         return other instanceof Currency && this.#code === other.code;
+    }
+
+    toString() {
+        return this.#code;
     }
 }
