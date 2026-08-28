@@ -1,4 +1,4 @@
-import { generateUuid } from '../../../shared/domain/model/uuid.js';
+import { PurchaseOrderId } from '../../../shared/domain/model/purchase-order-id.js';
 import { PurchaseOrderItem } from './purchase-order-item.js';
 import { Money } from '../../../shared/domain/model/money.js';
 import { DateTime } from '../../../shared/domain/model/date-time.js';
@@ -35,7 +35,7 @@ export class PurchaseOrder {
         if (!(currency instanceof Currency)) {
             throw new ValidationError("Currency must be a valid Currency object");
         }
-        this.#id = generateUuid();
+        this.#id = PurchaseOrderId.generate();
         this.#supplierId = supplierId;
         this.#currency = currency;
         this.#orderDate = orderDate instanceof DateTime ? orderDate : new DateTime();
@@ -58,10 +58,10 @@ export class PurchaseOrder {
      *   financial calculations and supplier agreements.
      *
      * @param {Object} params - The item parameters.
-     * @param {string} params.productId - The product ID.
+     * @param {ProductId} params.productId - The product ID.
      * @param {number} params.quantity - The quantity.
      * @param {number} params.unitPrice - The unit price amount.
-     * @throws {ValidationError} If state is not Draft, max items (50) are exceeded, or unit price is invalid (negative or non-finite).
+     * @throws {ValidationError} If state is not Draft, max items (50) are exceeded, or the unit price is invalid (negative or non-finite).
      */
     addItem({ productId, quantity, unitPrice }) {
         if (!this.#state.isDraft()) {
@@ -132,7 +132,7 @@ export class PurchaseOrder {
 
     /**
      * Transitions the purchase order to Canceled state.
-     * @throws {ValidationError} If in Completed state.
+     * @throws {ValidationError} If in the Completed state.
      */
     cancel() {
         this.#state = this.#state.toCanceledFrom(this.#state);
@@ -140,7 +140,7 @@ export class PurchaseOrder {
 
     /**
      * Gets the purchase order ID.
-     * @returns {string} The order ID.
+     * @returns {PurchaseOrderId} The order ID.
      */
     get id() {
         return this.#id;
@@ -172,10 +172,10 @@ export class PurchaseOrder {
 
     /**
      * Gets the list of items.
-     * @returns {PurchaseOrderItem[]} The items.
+     * @returns {PurchaseOrderItem[]} A read-only copy of the items.
      */
     get items() {
-        return this.#items;
+        return Object.freeze([...this.#items]);
     }
 
     /**
