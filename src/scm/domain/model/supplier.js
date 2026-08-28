@@ -29,20 +29,55 @@ export class Supplier {
         if (!(id instanceof SupplierId)) {
             throw new ValidationError("Supplier ID must be a valid SupplierId object");
         }
-        if (typeof name !== 'string' || name.length < 2 || name.length > 100) {
+        this.#id = id;
+        this.changeName(name);
+        if (contactEmail !== null) {
+            this.updateEmail(contactEmail);
+        } else {
+            this.#contactEmail = null;
+        }
+        
+        if (lastOrderTotalPrice !== null) {
+            this.recordOrder(lastOrderTotalPrice);
+        } else {
+            this.#lastOrderTotalPrice = null;
+        }
+    }
+
+    /**
+     * Changes the supplier name.
+     * @param {string} newName - The new name.
+     * @throws {ValidationError} If name is invalid.
+     */
+    changeName(newName) {
+        if (typeof newName !== 'string' || newName.length < 2 || newName.length > 100) {
             throw new ValidationError("Supplier name must be between 2 and 100 characters");
         }
-        if (contactEmail !== null && !this.#isValidEmail(contactEmail)) {
-            throw new ValidationError("Contact email must be a valid email address or null");
-        }
-        if (lastOrderTotalPrice !== null && !(lastOrderTotalPrice instanceof Money)) {
-            throw new ValidationError("Last order total price must be a Money object or null");
-        }
+        this.#name = newName;
+    }
 
-        this.#id = id;
-        this.#name = name;
-        this.#contactEmail = contactEmail;
-        this.#lastOrderTotalPrice = lastOrderTotalPrice;
+    /**
+     * Updates the contact email.
+     * @param {string} newEmail - The new email address.
+     * @throws {ValidationError} If email is invalid.
+     */
+    updateEmail(newEmail) {
+        if (!this.#isValidEmail(newEmail)) {
+            throw new ValidationError(`Invalid contact email: ${newEmail}`);
+        }
+        this.#contactEmail = newEmail;
+    }
+
+    /**
+     * Records a new order for this supplier.
+     * @param {Money} orderTotal - The total price of the order.
+     * @throws {ValidationError} If orderTotal is not a Money object.
+     */
+    recordOrder(orderTotal) {
+        if (!(orderTotal instanceof Money)) {
+            throw new ValidationError("Order total must be a valid Money object");
+        }
+        this.#lastOrderTotalPrice = orderTotal;
     }
 
     /**
