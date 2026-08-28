@@ -4,7 +4,7 @@
 Sample JavaScript console application illustrating object-oriented and domain-driven design principles in the context of Supply Chain Management and Procurement. 
 
 ## Features
-Main  business concepts include:
+Main business concepts include:
 - Suppliers
 - Purchase Orders
 - Purchase Order Items
@@ -24,11 +24,10 @@ The project demonstrates the following principles and concepts:
 - State Management: Purchase Order state transitions are managed through methods.
 
 ## User Stories
+
 In the document [docs/user-stories.md](docs/user-stories.md), you can find the user stories that describe the requirements and acceptance criteria for the project.
 
 ## Class Diagram
-The following class diagram illustrates the relationships between the main classes in the project:
-![class-diagram](https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/upc-pre-202610-1asi0730-sandbox/javascript-review/refs/heads/master/docs/class-diagram.puml?token=GHSAT0AAAAAADVFVJLANHUHIP7TR7XSTOMW2O4M5EQ)
 
 You can review the class diagram in the [docs/class-diagram.puml](docs/class-diagram.puml) file.
 
